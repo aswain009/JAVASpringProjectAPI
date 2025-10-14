@@ -7,12 +7,20 @@ import com.example.lugnutsautomotive.domain.OrderDetail;
 import com.example.lugnutsautomotive.repository.CustomerOrderRepository;
 import com.example.lugnutsautomotive.repository.CustomerRepository;
 import com.example.lugnutsautomotive.repository.OrderDetailRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/lugnuts/orders")
+@Tag(name = "Orders", description = "Operations on orders and order details")
 public class OrderController {
 
     private final CustomerOrderRepository orderRepository;
@@ -28,7 +36,9 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<CustomerOrder> list(@RequestParam(name = "customerNumber", required = false) Integer customerNumber) {
+    @Operation(summary = "List orders", description = "List all orders or filter by customer number")
+    public List<CustomerOrder> list(@Parameter(description = "Customer number filter")
+                                    @RequestParam(name = "customerNumber", required = false) Integer customerNumber) {
         if (customerNumber != null) {
             return orderRepository.findByCustomer_CustomerNumber(customerNumber);
         }
@@ -36,13 +46,22 @@ public class OrderController {
     }
 
     @GetMapping("/{orderNumber}")
-    public CustomerOrder get(@PathVariable Integer orderNumber) {
+    @Operation(summary = "Get order by number", responses = {
+            @ApiResponse(responseCode = "200", description = "Found", content = @Content(schema = @Schema(implementation = CustomerOrder.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found")
+    })
+    public CustomerOrder get(@Parameter(description = "Order number") @PathVariable Integer orderNumber) {
         return orderRepository.findById(orderNumber)
                 .orElseThrow(() -> new NotFoundException("Order " + orderNumber + " not found"));
     }
 
     @GetMapping("/{orderNumber}/details")
-    public List<OrderDetail> getDetails(@PathVariable Integer orderNumber) {
+    @Operation(summary = "List order details", responses = {
+            @ApiResponse(responseCode = "200", description = "Found",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = OrderDetail.class)))) ,
+            @ApiResponse(responseCode = "404", description = "Order Not Found")
+    })
+    public List<OrderDetail> getDetails(@Parameter(description = "Order number") @PathVariable Integer orderNumber) {
         // ensure order exists for proper 404
         orderRepository.findById(orderNumber)
                 .orElseThrow(() -> new NotFoundException("Order " + orderNumber + " not found"));
@@ -50,6 +69,7 @@ public class OrderController {
     }
 
     @PostMapping
+    @Operation(summary = "Create an order")
     public CustomerOrder create(@RequestBody CustomerOrder order) {
         if (order.getCustomer() != null) {
             Integer id = order.getCustomer().getCustomerNumber();
@@ -61,7 +81,8 @@ public class OrderController {
     }
 
     @PutMapping("/{orderNumber}")
-    public CustomerOrder update(@PathVariable Integer orderNumber, @RequestBody CustomerOrder order) {
+    @Operation(summary = "Update an order")
+    public CustomerOrder update(@Parameter(description = "Order number") @PathVariable Integer orderNumber, @RequestBody CustomerOrder order) {
         CustomerOrder existing = orderRepository.findById(orderNumber)
                 .orElseThrow(() -> new NotFoundException("Order " + orderNumber + " not found"));
         existing.setOrderDate(order.getOrderDate());
@@ -79,7 +100,8 @@ public class OrderController {
     }
 
     @DeleteMapping("/{orderNumber}")
-    public void delete(@PathVariable Integer orderNumber) {
+    @Operation(summary = "Delete an order")
+    public void delete(@Parameter(description = "Order number") @PathVariable Integer orderNumber) {
         orderRepository.deleteById(orderNumber);
     }
 }

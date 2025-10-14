@@ -129,7 +129,8 @@ SPRING_JPA_HIBERNATE_DDL_AUTO=update
 ```
 
 When the app starts, visit:
-- API docs/HAL Explorer: `http://localhost:8080/`
+- Swagger UI: `http://localhost:8080/swagger-ui.html` (or `/swagger-ui/index.html`)
+- OpenAPI JSON: `http://localhost:8080/v3/api-docs`
 - Lugnuts base path: `http://localhost:8080/api/lugnuts`
 
 
