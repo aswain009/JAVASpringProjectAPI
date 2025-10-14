@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 
 @Entity
+@jakarta.persistence.Table(name = "productlines")
 public class ProductLine {
     @Id
     @Column(length = 50)
