@@ -11,12 +11,12 @@ public class OrderDetail {
 
     @ManyToOne(optional = false)
     @MapsId("orderNumber")
-    @JoinColumn(name = "orderNumber")
+    @JoinColumn(name = "order_number")
     private CustomerOrder order;
 
     @ManyToOne(optional = false)
     @MapsId("productCode")
-    @JoinColumn(name = "productCode")
+    @JoinColumn(name = "product_code")
     private Product product;
 
     @Column(nullable = false)
