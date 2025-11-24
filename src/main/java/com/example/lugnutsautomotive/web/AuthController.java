@@ -17,10 +17,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
-        System.out.println("Received username: " + username);
-        System.out.println("Received password: " + password);
+//        System.out.println("Received username: " + username);
+//        System.out.println("Received password: " + password);
 
-        Optional<Admin> admin = adminRepository.findByusername(username);
+        Optional<Admin> admin = adminRepository.findByUserName(username);
         if (admin.isPresent() && admin.get().getPassword().equals(password)) {
             return ResponseEntity.ok("Login successful");
         }
