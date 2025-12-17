@@ -56,6 +56,7 @@ public class TestimonialController {
         existing.setCreatedAt(t.getCreatedAt());
         existing.setBody(t.getBody());
         existing.setCreatedBy(t.getCreatedBy());
+        existing.setRating(t.getRating());
         return testimonialRepository.save(existing);
     }
 

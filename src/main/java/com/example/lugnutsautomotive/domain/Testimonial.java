@@ -27,6 +27,10 @@ public class Testimonial {
     @Column(name = "created_by", length = 500)
     private String createdBy;
 
+    // Nullable rating value for the testimonial (can be null)
+    @Column(name = "rating")
+    private Integer rating;
+
     public Integer getId() { return id; }
 
     public String getTitle() { return title; }
@@ -40,4 +44,7 @@ public class Testimonial {
 
     public String getCreatedBy() { return createdBy; }
     public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
+
+    public Integer getRating() { return rating; }
+    public void setRating(Integer rating) { this.rating = rating; }
 }
